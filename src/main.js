@@ -1,5 +1,5 @@
-import renderCards from './render-cards.js';
-import renderFilters from './render-filters.js';
+import renderCards from './render-cards';
+import renderFilters from './render-filters';
 
 
 const filtersContainer = document.querySelector(`.main__filter`);

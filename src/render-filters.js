@@ -1,4 +1,4 @@
-import {getRandomNum, addContentToContainer} from './util.js';
+import {getRandomNum, addContentToContainer} from './util';
 
 
 const Filters = {

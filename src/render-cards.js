@@ -1,4 +1,4 @@
-import {addContentToContainer} from './util.js';
+import {addContentToContainer} from './util';
 
 
 const createCard = () => `
