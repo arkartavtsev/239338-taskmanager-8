@@ -12,26 +12,16 @@ const cardsContainer = document.querySelector(`.board__tasks`);
 renderFilters(filtersContainer);
 
 
-const filtersLabels = filtersContainer.querySelectorAll(`.filter__label`);
+const filters = filtersContainer.querySelectorAll(`.filter__input`);
 
 
-const onFilterLabelClick = (evt) => {
-  let target = evt.target;
-
-  while (target.parentElement !== filtersContainer) {
-    target = target.parentElement;
-  }
-
-  const filter = filtersContainer.querySelector(`#${target.getAttribute(`for`)}`);
-
-  if (!filter.disabled) {
-    renderCards(filter.value, cardsContainer);
-  }
+const onFilterClick = (evt) => {
+  renderCards(evt.target.value, cardsContainer);
 };
 
 
-for (const label of filtersLabels) {
-  label.addEventListener(`click`, onFilterLabelClick);
+for (const filter of filters) {
+  filter.addEventListener(`click`, onFilterClick);
 }
 
 
