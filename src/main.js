@@ -1,3 +1,4 @@
+import data from './data';
 import renderCards from './render-cards';
 import renderFilters from './render-filters';
 
@@ -16,7 +17,7 @@ const filters = filtersContainer.querySelectorAll(`.filter__input`);
 
 
 const onFilterClick = (evt) => {
-  renderCards(evt.target.value, cardsContainer);
+  renderCards(evt.target.value, data, cardsContainer);
 };
 
 
@@ -31,4 +32,4 @@ for (const filter of filters) {
 const currentFilter = filtersContainer.querySelector(`.filter__input[checked]`);
 
 
-renderCards(currentFilter.value, cardsContainer);
+renderCards(currentFilter.value, data, cardsContainer);
