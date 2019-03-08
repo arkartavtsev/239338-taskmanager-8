@@ -1,16 +1,8 @@
-import {CARD_COLORS} from './const';
+import {WEEK_DAYS, CARD_COLORS} from './const';
 import {addContentToContainer} from './util';
 
 
-const isCardRepeating = (repeatingDays) => {
-  for (const day in repeatingDays) {
-    if (repeatingDays[day] === true) {
-      return true;
-    }
-  }
-
-  return false;
-};
+const isCardRepeating = (repeatingDays) => Object.values(repeatingDays).some((day) => day);
 
 
 const addDateTime = (milliseconds) => {
@@ -51,27 +43,17 @@ const addDateTime = (milliseconds) => {
   `;
 };
 
-const addRepeatingDays = (repeatingDays, idCounter) => {
-  let markupFragment = ``;
-
-  for (const day in repeatingDays) {
-    if (day) {
-      markupFragment += `
-      <input
-        class="visually-hidden card__repeat-day-input"
-        type="checkbox"
-        id="repeat-${day}-${idCounter}"
-        name="repeat"
-        value="${day}"
-        ${repeatingDays[day] ? `checked` : ``}
-      />
-      <label class="card__repeat-day" for="repeat-${day}-${idCounter}">${day}</label>
-      `;
-    }
-  }
-
-  return markupFragment;
-};
+const addRepeatingDays = (repeatingDays, idCounter) => WEEK_DAYS.map((day) => `
+  <input
+    class="visually-hidden card__repeat-day-input"
+    type="checkbox"
+    id="repeat-${day}-${idCounter}"
+    name="repeat"
+    value="${day}"
+    ${repeatingDays[day] ? `checked` : ``}
+  />
+  <label class="card__repeat-day" for="repeat-${day}-${idCounter}">${day}</label>
+`).join(``);
 
 const addHashtags = (tags) => Array.from(tags).map((tag) => `
   <span class="card__hashtag-inner">

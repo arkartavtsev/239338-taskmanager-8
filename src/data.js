@@ -1,5 +1,5 @@
-import {CARD_COLORS} from './const';
-import {getRandomNum, getRandomItem} from './util';
+import {CARD_COLORS, WEEK_DAYS} from './const';
+import {getRandomNum, getRandomBoolean, getRandomItem} from './util';
 
 
 const TasksProperties = {
@@ -40,6 +40,11 @@ const generateTags = (possibleTags) => {
   return tags;
 };
 
+const generateRepeatingDays = () => WEEK_DAYS.reduce((res, day) => {
+  res[day] = getRandomBoolean();
+  return res;
+}, {});
+
 
 const generateTask = (properties) => ({
   title: getRandomItem(properties.TITLES),
@@ -47,17 +52,9 @@ const generateTask = (properties) => ({
   tags: generateTags(properties.TAGS),
   picture: `http://picsum.photos/100/100?r=${Math.random()}`,
   color: getRandomItem(properties.COLORS),
-  repeatingDays: {
-    'mo': Boolean(getRandomNum(0, 1)),
-    'tu': Boolean(getRandomNum(0, 1)),
-    'we': Boolean(getRandomNum(0, 1)),
-    'th': Boolean(getRandomNum(0, 1)),
-    'fr': Boolean(getRandomNum(0, 1)),
-    'sa': Boolean(getRandomNum(0, 1)),
-    'su': Boolean(getRandomNum(0, 1))
-  },
-  isFavorite: Boolean(getRandomNum(0, 1)),
-  isDone: Boolean(getRandomNum(0, 1))
+  repeatingDays: generateRepeatingDays(),
+  isFavorite: getRandomBoolean(),
+  isDone: getRandomBoolean()
 });
 
 
