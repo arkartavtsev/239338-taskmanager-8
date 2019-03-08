@@ -1,4 +1,4 @@
-import data from './data';
+import createTasks from './data';
 import renderCards from './render-cards';
 import renderFilters from './render-filters';
 
@@ -17,7 +17,7 @@ const filters = filtersContainer.querySelectorAll(`.filter__input`);
 
 
 const onFilterClick = (evt) => {
-  renderCards(evt.target.value, data, cardsContainer);
+  renderCards(createTasks(evt.target.value), cardsContainer);
 };
 
 
@@ -32,4 +32,4 @@ for (const filter of filters) {
 const currentFilter = filtersContainer.querySelector(`.filter__input[checked]`);
 
 
-renderCards(currentFilter.value, data, cardsContainer);
+renderCards(createTasks(currentFilter.value), cardsContainer);

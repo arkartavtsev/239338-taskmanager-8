@@ -207,12 +207,8 @@ const createCard = (cardData, idCounter) => `
 `;
 
 
-export default (count, data, container) => {
-  let cardsMarkup = ``;
-
-  for (let i = 0; i < count; i++) {
-    cardsMarkup += createCard(data[i], i);
-  }
+export default (data, container) => {
+  const cardsMarkup = data.map((task, index) => createCard(task, index)).join(``);
 
   addContentToContainer(cardsMarkup, container);
 };

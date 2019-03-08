@@ -3,7 +3,6 @@ import {getRandomNum, getRandomItem} from './util';
 
 
 const TasksProperties = {
-  COUNT: 30,
   TITLES: [
     `Изучить теорию`,
     `Сделать домашку`,
@@ -62,7 +61,7 @@ const generateTask = (properties) => ({
 });
 
 
-const createTasks = (count) => {
+export default (count) => {
   let tasks = [];
 
   for (let i = 0; i < count; i++) {
@@ -71,6 +70,3 @@ const createTasks = (count) => {
 
   return tasks;
 };
-
-
-export default createTasks(TasksProperties.COUNT);
