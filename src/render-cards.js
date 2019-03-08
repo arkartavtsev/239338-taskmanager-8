@@ -2,7 +2,7 @@ import {WEEK_DAYS, CARD_COLORS} from './const';
 import {addContentToContainer} from './util';
 
 
-const isCardRepeating = (repeatingDays) => Object.values(repeatingDays).some((day) => day);
+const isCardRepeating = (repeatingDays) => WEEK_DAYS.some((day) => repeatingDays[day]);
 
 
 const addDateTime = (milliseconds) => {
