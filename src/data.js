@@ -62,7 +62,10 @@ export default (count) => {
   let tasks = [];
 
   for (let i = 0; i < count; i++) {
-    tasks.push(generateTask(TasksProperties));
+    const item = generateTask(TasksProperties);
+    item.id = i;
+
+    tasks.push(item);
   }
 
   return tasks;

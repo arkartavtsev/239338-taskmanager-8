@@ -1,25 +1,23 @@
-import createTasks from './data';
+import getData from './data';
+
 import renderCards from './render-cards';
 import renderFilters from './render-filters';
-
-
-const filtersContainer = document.querySelector(`.main__filter`);
-const cardsContainer = document.querySelector(`.board__tasks`);
 
 
 // отрисовка фильтров на странице и добавление обработчиков
 
 
-renderFilters(filtersContainer);
+const filtersContainer = document.querySelector(`.main__filter`);
 
+
+renderFilters(filtersContainer);
 
 const filters = filtersContainer.querySelectorAll(`.filter__input`);
 
 
 const onFilterClick = (evt) => {
-  renderCards(createTasks(evt.target.value), cardsContainer);
+  renderCards(getData(evt.target.value));
 };
-
 
 for (const filter of filters) {
   filter.addEventListener(`click`, onFilterClick);
@@ -31,5 +29,4 @@ for (const filter of filters) {
 
 const currentFilter = filtersContainer.querySelector(`.filter__input[checked]`);
 
-
-renderCards(createTasks(currentFilter.value), cardsContainer);
+renderCards(getData(currentFilter.value));
