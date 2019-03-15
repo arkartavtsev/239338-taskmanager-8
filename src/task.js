@@ -1,9 +1,12 @@
 import {WEEK_DAYS} from './const';
-import {createElement} from './util';
+
+import Component from './component';
 
 
-export default class Task {
+export default class Task extends Component {
   constructor(data) {
+    super();
+
     this._title = data.title;
     this._dueDate = data.dueDate;
     this._tags = data.tags;
@@ -17,8 +20,6 @@ export default class Task {
       isFavorite: data.isFavorite,
       isDone: data.isDone
     };
-
-    this._element = null;
 
     this._onEdit = null;
     this._onEditButtonClick = this._onEditButtonClick.bind(this);
@@ -149,11 +150,6 @@ export default class Task {
   }
 
 
-  get element() {
-    return this._element;
-  }
-
-
   set onEdit(fn) {
     this._onEdit = fn;
   }
@@ -164,26 +160,14 @@ export default class Task {
     }
   }
 
-  bind() {
+
+  addListeners() {
     this._element.querySelector(`.card__btn--edit`)
       .addEventListener(`click`, this._onEditButtonClick);
   }
 
-  unbind() {
+  removeListeners() {
     this._element.querySelector(`.card__btn--edit`)
       .removeEventListener(`click`, this._onEditButtonClick);
-  }
-
-
-  render() {
-    this._element = createElement(this.template);
-    this.bind();
-
-    return this._element;
-  }
-
-  unrender() {
-    this.unbind();
-    this._element = null;
   }
 }

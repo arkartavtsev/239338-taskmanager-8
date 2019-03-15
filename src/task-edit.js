@@ -1,113 +1,44 @@
 import {WEEK_DAYS, CARD_COLORS} from './const';
-import {createElement} from './util';
+
+import Task from './task';
 
 
-export default class TaskEdit {
+export default class TaskEdit extends Task {
   constructor(data) {
+    super(data);
+
     this._id = data.id;
-    this._title = data.title;
-    this._dueDate = data.dueDate;
-    this._tags = data.tags;
-    this._picture = data.picture;
-    this._color = data.color;
-    this._repeatingDays = data.repeatingDays;
-
-    this._state = {
-      isRepeated: WEEK_DAYS.some((day) => this._repeatingDays[day]),
-      isOverdue: this._dueDate < Date.now(),
-      isFavorite: data.isFavorite,
-      isDone: data.isDone
-    };
-
-    this._element = null;
 
     this._onSubmit = null;
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
   }
 
 
-  _addDateTime() {
-    const dateTime = new Date(this._dueDate);
-
-    const dateOptions = {
-      day: `numeric`,
-      month: `long`
-    };
-
-    const timeOptions = {
-      hour: `numeric`,
-      minute: `numeric`
-    };
-
-    const date = dateTime.toLocaleString(`en-GB`, dateOptions);
-    const time = dateTime.toLocaleString(`en-US`, timeOptions);
-
-    return `
-      <label class="card__input-deadline-wrap">
-        <input
-          class="card__date"
-          type="text"
-          placeholder="${date}"
-          name="date"
-          value="${date}"
-        />
-      </label>
-      <label class="card__input-deadline-wrap">
-        <input
-          class="card__time"
-          type="text"
-          placeholder="${time}"
-          name="time"
-          value="${time}"
-        />
-      </label>
-    `;
-  }
-
-  _addRepeatingDays(idCounter) {
+  _addRepeatingDays() {
     return WEEK_DAYS.map((day) => `
       <input
         class="visually-hidden card__repeat-day-input"
         type="checkbox"
-        id="repeat-${day}-${idCounter}"
+        id="repeat-${day}-${this._id}"
         name="repeat"
         value="${day}"
         ${this._repeatingDays[day] ? `checked` : ``}
       />
-      <label class="card__repeat-day" for="repeat-${day}-${idCounter}">${day}</label>
+      <label class="card__repeat-day" for="repeat-${day}-${this._id}">${day}</label>
     `).join(``);
   }
 
-  _addHashtags() {
-    return Array.from(this._tags).map((tag) => `
-      <span class="card__hashtag-inner">
-       <input
-         type="hidden"
-         name="hashtag"
-         value="${tag}"
-         class="card__hashtag-hidden-input"
-       />
-       <button type="button" class="card__hashtag-name">
-         #${tag}
-       </button>
-       <button type="button" class="card__hashtag-delete">
-         delete
-       </button>
-      </span>
-    `).join(``);
-  }
-
-  _addColorPickers(idCounter) {
+  _addColorPickers() {
     return CARD_COLORS.map((color) => `
       <input
         type="radio"
-        id="color-${color}-${idCounter}"
+        id="color-${color}-${this._id}"
         class="card__color-input card__color-input--${color} visually-hidden"
         name="color"
         value="${color}"
         ${color === this._color ? `checked` : ``}
       />
-      <label for="color-${color}-${idCounter}" class="card__color card__color--${color}">${color}</label>
+      <label for="color-${color}-${this._id}" class="card__color card__color--${color}">${color}</label>
     `).join(``);
   }
 
@@ -164,7 +95,7 @@ export default class TaskEdit {
 
                   <fieldset class="card__repeat-days" ${this._state.isRepeated ? `` : `disabled`}>
                     <div class="card__repeat-days-inner">
-                      ${this._addRepeatingDays(this._id)}
+                      ${this._addRepeatingDays()}
                     </div>
                   </fieldset>
                 </div>
@@ -201,7 +132,7 @@ export default class TaskEdit {
               <div class="card__colors-inner">
                 <h3 class="card__colors-title">Color</h3>
                 <div class="card__colors-wrap">
-                  ${this._addColorPickers(this._id)}
+                  ${this._addColorPickers()}
                 </div>
               </div>
             </div>
@@ -217,11 +148,6 @@ export default class TaskEdit {
   }
 
 
-  get element() {
-    return this._element;
-  }
-
-
   set onSubmit(fn) {
     this._onSubmit = fn;
   }
@@ -234,26 +160,14 @@ export default class TaskEdit {
     }
   }
 
-  bind() {
+
+  addListeners() {
     this._element.querySelector(`.card__form`)
       .addEventListener(`submit`, this._onSubmitButtonClick);
   }
 
-  unbind() {
+  removeListeners() {
     this._element.querySelector(`.card__form`)
       .removeEventListener(`submit`, this._onSubmitButtonClick);
-  }
-
-
-  render() {
-    this._element = createElement(this.template);
-    this.bind();
-
-    return this._element;
-  }
-
-  unrender() {
-    this.unbind();
-    this._element = null;
   }
 }
