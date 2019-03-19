@@ -4,6 +4,8 @@ import TaskEdit from './task-edit';
 
 const cardsContainer = document.querySelector(`.board__tasks`);
 
+const updateTaskData = (task, newTask) => Object.assign({}, task, newTask);
+
 
 export default (data) => {
   const fragment = document.createDocumentFragment();
@@ -22,7 +24,11 @@ export default (data) => {
       taskComponent.unrender();
     };
 
-    editTaskComponent.onSubmit = () => {
+    editTaskComponent.onSubmit = (newObject) => {
+      const updatedTask = updateTaskData(taskData, newObject);
+
+      taskComponent.update(updatedTask);
+
       taskComponent.render();
       cardsContainer.replaceChild(taskComponent.element, editTaskComponent.element);
       editTaskComponent.unrender();
