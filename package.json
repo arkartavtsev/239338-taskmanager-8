@@ -21,5 +21,9 @@
   },
   "eslintIgnore": [
     "webpack.config.js"
-  ]
+  ],
+  "dependencies": {
+    "flatpickr": "4.5.7",
+    "moment": "2.24.0"
+  }
 }
