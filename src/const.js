@@ -8,6 +8,18 @@ export const WEEK_DAYS = [
   `su`
 ];
 
+
+export const FILTERS = [
+  `all`,
+  `overdue`,
+  `today`,
+  `favorites`,
+  `repeating`,
+  `tags`,
+  `archive`
+];
+
+
 export const CARD_COLORS = [
   `black`,
   `yellow`,
@@ -15,3 +27,8 @@ export const CARD_COLORS = [
   `green`,
   `pink`
 ];
+
+export const CardsCount = {
+  MIN: 5,
+  MAX: 10
+};

@@ -12,7 +12,3 @@ export const createElement = (template) => {
 
   return newElement.firstChild;
 };
-
-export const addContentToContainer = (content, container) => {
-  container.innerHTML = content;
-};

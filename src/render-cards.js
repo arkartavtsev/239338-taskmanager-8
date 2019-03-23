@@ -27,6 +27,10 @@ export default (data) => {
 
   cardsContainer.innerHTML = ``;
 
+  if (!data) {
+    return;
+  }
+
   for (const taskData of data) {
     const taskComponent = new Task(taskData);
     const taskEditComponent = new TaskEdit(taskData);
