@@ -29,6 +29,7 @@ export default class TaskEdit extends Component {
 
 
     this._form = null;
+    this._deleteBtn = null;
 
     this._dateToggle = null;
     this._dateStatus = null;
@@ -46,10 +47,16 @@ export default class TaskEdit extends Component {
 
 
     this._onSave = null;
+    this._onDelete = null;
+
 
     this._onFormSubmit = this._onFormSubmit.bind(this);
+    this._onDeleteBtnClick = this._onDeleteBtnClick.bind(this);
+
     this._onDateToggleClick = this._onDateToggleClick.bind(this);
+
     this._onRepeatToggleClick = this._onRepeatToggleClick.bind(this);
+
     this._onColorPickerClick = this._onColorPickerClick.bind(this);
   }
 
@@ -226,6 +233,10 @@ export default class TaskEdit extends Component {
     this._onSave = fn;
   }
 
+  set onDelete(fn) {
+    this._onDelete = fn;
+  }
+
 
   update(data) {
     this._title = data.title;
@@ -304,6 +315,13 @@ export default class TaskEdit extends Component {
   }
 
 
+  _onDeleteBtnClick() {
+    if (typeof this._onDelete === `function`) {
+      this._onDelete();
+    }
+  }
+
+
   _onDateToggleClick() {
     this._state.isDate = !this._state.isDate;
 
@@ -342,6 +360,7 @@ export default class TaskEdit extends Component {
 
   addElements() {
     this._form = this._element.querySelector(`.card__form`);
+    this._deleteBtn = this._element.querySelector(`.card__delete`);
 
     this._dateToggle = this._element.querySelector(`.card__date-deadline-toggle`);
     this._dateStatus = this._element.querySelector(`.card__date-status`);
@@ -358,7 +377,10 @@ export default class TaskEdit extends Component {
 
   addListeners() {
     this._form.addEventListener(`submit`, this._onFormSubmit);
+    this._deleteBtn.addEventListener(`click`, this._onDeleteBtnClick);
+
     this._dateToggle.addEventListener(`click`, this._onDateToggleClick);
+
     this._repeatTogle.addEventListener(`click`, this._onRepeatToggleClick);
 
     for (const picker of this._colorPickers) {
@@ -380,6 +402,7 @@ export default class TaskEdit extends Component {
 
   removeElements() {
     this._form = null;
+    this._deleteBtn = null;
 
     this._dateToggle = null;
     this._dateStatus = null;
@@ -396,7 +419,10 @@ export default class TaskEdit extends Component {
 
   removeListeners() {
     this._form.removeEventListener(`submit`, this._onFormSubmit);
+    this._deleteBtn.removeEventListener(`click`, this._onDeleteBtnClick);
+
     this._dateToggle.removeEventListener(`click`, this._onDateToggleClick);
+
     this._repeatTogle.removeEventListener(`click`, this._onRepeatToggleClick);
 
     for (const picker of this._colorPickers) {

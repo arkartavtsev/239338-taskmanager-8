@@ -13,6 +13,14 @@ const updateTask = (tasks, currentTask, newTask) => {
   return tasks[index];
 };
 
+const deleteTask = (tasks, currentTask) => {
+  const index = tasks.findIndex((it) => it === currentTask);
+
+  tasks.splice(index, 1);
+
+  return tasks;
+};
+
 
 export default (data) => {
   const fragment = document.createDocumentFragment();
@@ -24,6 +32,7 @@ export default (data) => {
     const taskEditComponent = new TaskEdit(taskData);
 
     fragment.appendChild(taskComponent.render());
+
 
     taskComponent.onEdit = () => {
       taskEditComponent.render();
@@ -40,6 +49,12 @@ export default (data) => {
       taskComponent.render();
       cardsContainer.replaceChild(taskComponent.element, taskEditComponent.element);
       taskEditComponent.unrender();
+    };
+
+
+    taskEditComponent.onDelete = () => {
+      taskEditComponent.unrender();
+      deleteTask(data, taskData);
     };
   }
 
