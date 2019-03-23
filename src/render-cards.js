@@ -4,7 +4,14 @@ import TaskEdit from './task-edit';
 
 const cardsContainer = document.querySelector(`.board__tasks`);
 
-const updateTaskData = (task, newTask) => Object.assign({}, task, newTask);
+
+const updateTask = (tasks, currentTask, newTask) => {
+  const index = tasks.findIndex((it) => it === currentTask);
+
+  tasks[index] = Object.assign({}, currentTask, newTask);
+
+  return tasks[index];
+};
 
 
 export default (data) => {
@@ -14,24 +21,25 @@ export default (data) => {
 
   for (const taskData of data) {
     const taskComponent = new Task(taskData);
-    const editTaskComponent = new TaskEdit(taskData);
+    const taskEditComponent = new TaskEdit(taskData);
 
     fragment.appendChild(taskComponent.render());
 
     taskComponent.onEdit = () => {
-      editTaskComponent.render();
-      cardsContainer.replaceChild(editTaskComponent.element, taskComponent.element);
+      taskEditComponent.render();
+      cardsContainer.replaceChild(taskEditComponent.element, taskComponent.element);
       taskComponent.unrender();
     };
 
-    editTaskComponent.onSubmit = (newObject) => {
-      const updatedTask = updateTaskData(taskData, newObject);
+
+    taskEditComponent.onSave = (newData) => {
+      const updatedTask = updateTask(data, taskData, newData);
 
       taskComponent.update(updatedTask);
 
       taskComponent.render();
-      cardsContainer.replaceChild(taskComponent.element, editTaskComponent.element);
-      editTaskComponent.unrender();
+      cardsContainer.replaceChild(taskComponent.element, taskEditComponent.element);
+      taskEditComponent.unrender();
     };
   }
 

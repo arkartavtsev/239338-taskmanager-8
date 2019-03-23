@@ -8,7 +8,7 @@ import Component from './component';
 
 export default class TaskEdit extends Component {
   constructor(data) {
-    super(data);
+    super();
 
     this._id = data.id;
 
@@ -27,15 +27,30 @@ export default class TaskEdit extends Component {
       isDone: data.isDone,
     };
 
+
+    this._form = null;
+
+    this._dateToggle = null;
+    this._dateStatus = null;
+    this._dateInputsGroup = null;
+    this._dateInput = null;
+    this._timeInput = null;
     this._datePicker = null;
     this._timePicker = null;
 
-    this._onSubmit = null;
+    this._repeatTogle = null;
+    this._repeatStatus = null;
+    this._repeatingDaysPickers = null;
 
-    this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
-    this._onChangeDate = this._onChangeDate.bind(this);
-    this._onChangeRepeated = this._onChangeRepeated.bind(this);
-    this._onChangeColor = this._onChangeColor.bind(this);
+    this._colorPickers = null;
+
+
+    this._onSave = null;
+
+    this._onFormSubmit = this._onFormSubmit.bind(this);
+    this._onDateToggleClick = this._onDateToggleClick.bind(this);
+    this._onRepeatToggleClick = this._onRepeatToggleClick.bind(this);
+    this._onColorPickerClick = this._onColorPickerClick.bind(this);
   }
 
 
@@ -207,8 +222,8 @@ export default class TaskEdit extends Component {
   }
 
 
-  set onSubmit(fn) {
-    this._onSubmit = fn;
+  set onSave(fn) {
+    this._onSave = fn;
   }
 
 
@@ -275,53 +290,49 @@ export default class TaskEdit extends Component {
     return entry;
   }
 
-  _onSubmitButtonClick(evt) {
+  _onFormSubmit(evt) {
     evt.preventDefault();
 
     const formData = new FormData(this._element.querySelector(`.card__form`));
     const newData = this._processForm(formData);
 
-    if (typeof this._onSubmit === `function`) {
-      this._onSubmit(newData);
+    if (typeof this._onSave === `function`) {
+      this._onSave(newData);
     }
 
     this.update(newData);
   }
 
 
-  _onChangeDate() {
+  _onDateToggleClick() {
     this._state.isDate = !this._state.isDate;
 
-    const dateStatus = this._element.querySelector(`.card__date-status`);
-    const dateInputs = this._element.querySelector(`.card__date-deadline`);
-
     if (this._state.isDate) {
-      dateStatus.textContent = `yes`;
-      dateInputs.disabled = false;
+      this._dateStatus.textContent = `yes`;
+      this._dateInputsGroup.disabled = false;
     } else {
-      dateStatus.textContent = `no`;
-      dateInputs.disabled = true;
+      this._dateStatus.textContent = `no`;
+      this._dateInputsGroup.disabled = true;
     }
   }
 
-  _onChangeRepeated() {
-    this._state.isRepeated = !this._state.isRepeated;
 
-    const repeatStatus = this._element.querySelector(`.card__repeat-status`);
-    const daysPickers = this._element.querySelector(`.card__repeat-days`);
+  _onRepeatToggleClick() {
+    this._state.isRepeated = !this._state.isRepeated;
 
     if (this._state.isRepeated) {
       this._element.classList.add(`card--repeat`);
-      repeatStatus.textContent = `yes`;
-      daysPickers.disabled = false;
+      this._repeatStatus.textContent = `yes`;
+      this._repeatingDaysPickers.disabled = false;
     } else {
       this._element.classList.remove(`card--repeat`);
-      repeatStatus.textContent = `no`;
-      daysPickers.disabled = true;
+      this._repeatStatus.textContent = `no`;
+      this._repeatingDaysPickers.disabled = true;
     }
   }
 
-  _onChangeColor(evt) {
+
+  _onColorPickerClick(evt) {
     this._element.classList.remove(`card--${this._color}`);
     this._element.classList.add(`card--${evt.target.value}`);
 
@@ -329,49 +340,68 @@ export default class TaskEdit extends Component {
   }
 
 
+  addElements() {
+    this._form = this._element.querySelector(`.card__form`);
+
+    this._dateToggle = this._element.querySelector(`.card__date-deadline-toggle`);
+    this._dateStatus = this._element.querySelector(`.card__date-status`);
+    this._dateInputsGroup = this._element.querySelector(`.card__date-deadline`);
+    this._dateInput = this._element.querySelector(`.card__date`);
+    this._timeInput = this._element.querySelector(`.card__time`);
+
+    this._repeatTogle = this._element.querySelector(`.card__repeat-toggle`);
+    this._repeatStatus = this._element.querySelector(`.card__repeat-status`);
+    this._repeatingDaysPickers = this._element.querySelector(`.card__repeat-days`);
+
+    this._colorPickers = this._element.querySelectorAll(`.card__color-input`);
+  }
+
   addListeners() {
-    this._element.querySelector(`.card__form`)
-      .addEventListener(`submit`, this._onSubmitButtonClick);
-    this._element.querySelector(`.card__date-deadline-toggle`)
-      .addEventListener(`click`, this._onChangeDate);
-    this._element.querySelector(`.card__repeat-toggle`)
-      .addEventListener(`click`, this._onChangeRepeated);
+    this._form.addEventListener(`submit`, this._onFormSubmit);
+    this._dateToggle.addEventListener(`click`, this._onDateToggleClick);
+    this._repeatTogle.addEventListener(`click`, this._onRepeatToggleClick);
 
-
-    const colorPickers = this._element.querySelectorAll(`.card__color-input`);
-
-    for (const picker of colorPickers) {
-      picker.addEventListener(`click`, this._onChangeColor);
+    for (const picker of this._colorPickers) {
+      picker.addEventListener(`click`, this._onColorPickerClick);
     }
 
-
-    this._datePicker = flatpickr(this._element.querySelector(`.card__date`), {
+    this._datePicker = flatpickr(this._dateInput, {
       dateFormat: `j F`,
       minDate: `today`
     });
 
-    this._timePicker = flatpickr(this._element.querySelector(`.card__time`), {
+    this._timePicker = flatpickr(this._timeInput, {
       enableTime: true,
       noCalendar: true,
       dateFormat: `h:i K`
     });
   }
 
+
+  removeElements() {
+    this._form = null;
+
+    this._dateToggle = null;
+    this._dateStatus = null;
+    this._dateInputsGroup = null;
+    this._dateInput = null;
+    this._timeInput = null;
+
+    this._repeatTogle = null;
+    this._repeatStatus = null;
+    this._repeatingDaysPickers = null;
+
+    this._colorPickers = null;
+  }
+
   removeListeners() {
-    this._element.querySelector(`.card__form`)
-      .removeEventListener(`submit`, this._onSubmitButtonClick);
-    this._element.querySelector(`.card__date-deadline-toggle`)
-      .removeEventListener(`click`, this._onChangeDate);
-    this._element.querySelector(`.card__repeat-toggle`)
-      .removeEventListener(`click`, this._onChangeRepeated);
+    this._form.removeEventListener(`submit`, this._onFormSubmit);
+    this._dateToggle.removeEventListener(`click`, this._onDateToggleClick);
+    this._repeatTogle.removeEventListener(`click`, this._onRepeatToggleClick);
 
-
-    const colorPickers = this._element.querySelectorAll(`.card__color-input`);
-
-    for (const picker of colorPickers) {
-      picker.removeEventListener(`click`, this._onChangeColor);
+    for (const picker of this._colorPickers) {
+      picker.removeEventListener(`click`, this._onColorPickerClick);
     }
-
 
     if (this._datePicker) {
       this._datePicker.destroy();

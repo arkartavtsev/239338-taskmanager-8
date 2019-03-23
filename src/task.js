@@ -21,9 +21,11 @@ export default class Task extends Component {
       isDone: data.isDone
     };
 
+    this._editBtn = null;
+
     this._onEdit = null;
 
-    this._onEditButtonClick = this._onEditButtonClick.bind(this);
+    this._onEditBtnClick = this._onEditBtnClick.bind(this);
   }
 
 
@@ -141,20 +143,27 @@ export default class Task extends Component {
   }
 
 
-  _onEditButtonClick() {
+  _onEditBtnClick() {
     if (typeof this._onEdit === `function`) {
       this._onEdit();
     }
   }
 
 
+  addElements() {
+    this._editBtn = this._element.querySelector(`.card__btn--edit`);
+  }
+
   addListeners() {
-    this._element.querySelector(`.card__btn--edit`)
-      .addEventListener(`click`, this._onEditButtonClick);
+    this._editBtn.addEventListener(`click`, this._onEditBtnClick);
+  }
+
+
+  removeElements() {
+    this._editBtn = null;
   }
 
   removeListeners() {
-    this._element.querySelector(`.card__btn--edit`)
-      .removeEventListener(`click`, this._onEditButtonClick);
+    this._editBtn.removeEventListener(`click`, this._onEditBtnClick);
   }
 }
