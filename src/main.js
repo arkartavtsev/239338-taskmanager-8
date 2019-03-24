@@ -7,9 +7,15 @@ import Filter from './filter';
 
 import getData from './data';
 import renderCards from './render-cards';
+import renderStatistic from './render-statistic';
 
 
 const filtersContainer = document.querySelector(`.main__filter`);
+const statisticContainer = document.querySelector(`.statistic`);
+const cardsContainer = document.querySelector(`.board`);
+
+const showStatisticBtn = document.querySelector(`#control__statistic`);
+const showTasksBtn = document.querySelector(`#control__task`);
 
 
 const data = getData(getRandomNum(CardsCount.MIN, CardsCount.MAX));
@@ -67,3 +73,23 @@ const renderFilters = (container) => {
 
 renderFilters(filtersContainer);
 renderCards(data);
+renderStatistic(data);
+
+
+const onShowStatisticBtnClick = () => {
+  filtersContainer.classList.add(`visually-hidden`);
+  cardsContainer.classList.add(`visually-hidden`);
+
+  statisticContainer.classList.remove(`visually-hidden`);
+};
+
+const onShowTasksBtnClick = () => {
+  filtersContainer.classList.remove(`visually-hidden`);
+  cardsContainer.classList.remove(`visually-hidden`);
+
+  statisticContainer.classList.add(`visually-hidden`);
+};
+
+
+showStatisticBtn.addEventListener(`click`, onShowStatisticBtnClick);
+showTasksBtn.addEventListener(`click`, onShowTasksBtnClick);

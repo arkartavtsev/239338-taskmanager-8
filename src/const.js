@@ -8,6 +8,14 @@ export const WEEK_DAYS = [
   `su`
 ];
 
+export const Color = {
+  black: `#000000`,
+  yellow: `#ffe125`,
+  blue: `#0c5cdd`,
+  green: `#31b55c`,
+  pink: `#ff3cb9`
+};
+
 
 export const FILTERS = [
   `all`,
