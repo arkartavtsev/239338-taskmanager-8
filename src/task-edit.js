@@ -122,11 +122,11 @@ export default class TaskEdit extends Component {
               <button type="button" class="card__btn card__btn--edit card__btn--disabled">
                 edit
               </button>
-              <button type="button" class="card__btn card__btn--archive">
-                archive
+              <button type="button" class="card__btn card__btn--archive card__btn--disabled">
+                ${this._state.isDone ? `unarch` : `archive`}
               </button>
               <button type="button" class="card__btn card__btn--favorites card__btn--disabled">
-                favorites
+                ${this._state.isFavorite ? `unfavorite` : `favorite`}
               </button>
             </div>
 

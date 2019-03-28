@@ -21,11 +21,18 @@ export default class Task extends Component {
       isDone: data.isDone
     };
 
+    this._cardInner = null;
     this._editBtn = null;
+    this._archiveBtn = null;
+    this._favoritesBtn = null;
 
     this._onEdit = null;
+    this._onAddToArchive = null;
+    this._onAddToFavorites = null;
 
     this._onEditBtnClick = this._onEditBtnClick.bind(this);
+    this._archiveBtnClick = this._archiveBtnClick.bind(this);
+    this._favoritesBtnClick = this._favoritesBtnClick.bind(this);
   }
 
 
@@ -53,10 +60,10 @@ export default class Task extends Component {
               edit
             </button>
             <button type="button" class="card__btn card__btn--archive">
-              archive
+              ${this._state.isDone ? `unarch` : `archive`}
             </button>
-            <button type="button" class="card__btn card__btn--favorites card__btn--disabled">
-              favorites
+            <button type="button" class="card__btn card__btn--favorites">
+              ${this._state.isFavorite ? `unfavorite` : `favorite`}
             </button>
           </div>
 
@@ -129,8 +136,25 @@ export default class Task extends Component {
   }
 
 
+  get archiveBtn() {
+    return this._archiveBtn;
+  }
+
+  get favoriteBtn() {
+    return this._favoriteBtn;
+  }
+
+
   set onEdit(fn) {
     this._onEdit = fn;
+  }
+
+  set onAddToArchive(fn) {
+    this._onAddToArchive = fn;
+  }
+
+  set onAddToFavorites(fn) {
+    this._onAddToFavorites = fn;
   }
 
 
@@ -143,27 +167,76 @@ export default class Task extends Component {
   }
 
 
+  blockCard() {
+    this._editBtn.disabled = true;
+    this._archiveBtn.disabled = true;
+    this._favoritesBtn.disabled = true;
+  }
+
+  unblockCard() {
+    this._editBtn.disabled = false;
+    this._archiveBtn.disabled = false;
+    this._favoritesBtn.disabled = false;
+  }
+
+  showError() {
+    const ANIMATION_TIMEOUT = 600;
+
+    this._element.style.animation = `shake ${ANIMATION_TIMEOUT / 1000}s`;
+    this._cardInner.style.border = `1px solid red`;
+
+    setTimeout(() => {
+      this._element.style.animation = ``;
+      this._cardInner.style.border = ``;
+
+      this.unblockCard();
+    }, ANIMATION_TIMEOUT);
+  }
+
+
   _onEditBtnClick() {
     if (typeof this._onEdit === `function`) {
       this._onEdit();
     }
   }
 
+  _archiveBtnClick() {
+    if (typeof this._onAddToArchive === `function`) {
+      this._onAddToArchive(this._state.isDone);
+    }
+  }
+
+  _favoritesBtnClick() {
+    if (typeof this._onAddToFavorites === `function`) {
+      this._onAddToFavorites(this._state.isFavorite);
+    }
+  }
+
 
   addElements() {
+    this._cardInner = this._element.querySelector(`.card__inner`);
     this._editBtn = this._element.querySelector(`.card__btn--edit`);
+    this._archiveBtn = this._element.querySelector(`.card__btn--archive`);
+    this._favoritesBtn = this._element.querySelector(`.card__btn--favorites`);
   }
 
   addListeners() {
     this._editBtn.addEventListener(`click`, this._onEditBtnClick);
+    this._archiveBtn.addEventListener(`click`, this._archiveBtnClick);
+    this._favoritesBtn.addEventListener(`click`, this._favoritesBtnClick);
   }
 
 
   removeElements() {
+    this._cardInner = null;
     this._editBtn = null;
+    this._archiveBtn = null;
+    this._favoritesBtn = null;
   }
 
   removeListeners() {
     this._editBtn.removeEventListener(`click`, this._onEditBtnClick);
+    this._archiveBtn.removeEventListener(`click`, this._archiveBtnClick);
+    this._favoritesBtn.removeEventListener(`click`, this._favoritesBtnClick);
   }
 }

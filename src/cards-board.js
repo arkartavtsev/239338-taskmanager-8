@@ -71,6 +71,41 @@ const renderCards = (data) => {
       taskComponent.unrender();
     };
 
+    taskComponent.onAddToArchive = () => {
+      taskData.isDone = !taskData.isDone;
+
+      taskComponent.blockCard();
+
+      api.updateTask(taskData.id, taskData.toRAW())
+        .then(() => api.getTasks())
+        .then((tasks) => {
+          taskComponent.unblockCard();
+
+          showTasks(tasks);
+        })
+        .catch(() => {
+          taskData.isDone = !taskData.isDone;
+          taskComponent.showError();
+        });
+    };
+
+    taskComponent.onAddToFavorites = () => {
+      taskData.isFavorite = !taskData.isFavorite;
+
+      taskComponent.blockCard();
+
+      api.updateTask(taskData.id, taskData.toRAW())
+        .then(() => api.getTasks())
+        .then((tasks) => {
+          taskComponent.unblockCard();
+          showTasks(tasks);
+        })
+        .catch(() => {
+          taskData.isFavorite = !taskData.isFavorite;
+          taskComponent.showError();
+        });
+    };
+
 
     taskEditComponent.onSave = (newData) => {
       updateTaskData(taskData, newData);
