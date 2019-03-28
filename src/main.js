@@ -4,7 +4,7 @@ import Filter from './filter';
 
 import api from './backend';
 import {showMsg, showTasks} from './cards-board';
-import renderStatistic from './render-statistic';
+import {renderStatistic, destroyStatisticComponents} from './statistic';
 
 
 const filtersContainer = document.querySelector(`.main__filter`);
@@ -66,6 +66,7 @@ const onShowStatisticBtnClick = () => {
 
   loadTasks()
     .then((tasks) => {
+      destroyStatisticComponents();
       renderStatistic(tasks);
       boardMsg.classList.add(`visually-hidden`);
     });
@@ -76,6 +77,8 @@ const onShowStatisticBtnClick = () => {
 const onShowTasksBtnClick = () => {
   filtersContainer.classList.remove(`visually-hidden`);
   boardTasks.classList.remove(`visually-hidden`);
+
+  destroyStatisticComponents();
 
   statisticContainer.classList.add(`visually-hidden`);
 };

@@ -26,6 +26,15 @@ const colorsCtxWrapper = statistic.querySelector(`.statistic__colors-wrap`);
 const colorsCtx = statistic.querySelector(`.statistic__colors`);
 
 
+tagsCtxWrapper.classList.remove(`visually-hidden`);
+colorsCtxWrapper.classList.remove(`visually-hidden`);
+
+
+let rangePicker;
+let tagsChart;
+let colorsChart;
+
+
 const countItemsEntry = (items) => items.reduce((acc, item) => {
   acc[item] = acc[item] + 1 || 1;
   return acc;
@@ -82,11 +91,11 @@ const updateChart = (chart, newData) => {
 };
 
 
-export default (data) => {
+const renderStatistic = (data) => {
   let stat = getStatFromPeriod(data, CurrentWeek.FIRST_DAY, CurrentWeek.LAST_DAY);
 
 
-  flatpickr(periodInput, {
+  rangePicker = flatpickr(periodInput, {
     mode: `range`,
     dateFormat: `j F`,
     defaultDate: [CurrentWeek.FIRST_DAY, CurrentWeek.LAST_DAY],
@@ -112,9 +121,23 @@ export default (data) => {
   };
 
 
-  tagsCtxWrapper.classList.remove(`visually-hidden`);
-  colorsCtxWrapper.classList.remove(`visually-hidden`);
-
-  const tagsChart = getChart(tagsChartOptions);
-  const colorsChart = getChart(colorsChartOptions);
+  tagsChart = getChart(tagsChartOptions);
+  colorsChart = getChart(colorsChartOptions);
 };
+
+const destroyStatisticComponents = () => {
+  if (rangePicker) {
+    rangePicker.destroy();
+  }
+
+  if (tagsChart) {
+    tagsChart.destroy();
+  }
+
+  if (colorsChart) {
+    colorsChart.destroy();
+  }
+};
+
+
+export {renderStatistic, destroyStatisticComponents};
