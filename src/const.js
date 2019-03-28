@@ -35,8 +35,3 @@ export const CARD_COLORS = [
   `green`,
   `pink`
 ];
-
-export const CardsCount = {
-  MIN: 5,
-  MAX: 10
-};

@@ -1,54 +1,24 @@
-import * as moment from 'moment';
-
-import {FILTERS, CardsCount} from './const';
-import {getRandomNum} from './util';
+import {FILTERS} from './const';
 
 import Filter from './filter';
 
-import getData from './data';
-import renderCards from './render-cards';
+import api from './backend';
+import {showMsg, showTasks} from './cards-board';
 import renderStatistic from './render-statistic';
 
 
 const filtersContainer = document.querySelector(`.main__filter`);
 const statisticContainer = document.querySelector(`.statistic`);
+
 const cardsContainer = document.querySelector(`.board`);
+const boardMsg = cardsContainer.querySelector(`.board__no-tasks`);
+const boardTasks = document.querySelector(`.board__tasks`);
 
 const showStatisticBtn = document.querySelector(`#control__statistic`);
 const showTasksBtn = document.querySelector(`#control__task`);
 
 
-const data = getData(getRandomNum(CardsCount.MIN, CardsCount.MAX));
-
-
-const filterTasks = (tasks, filtrationType) => {
-  switch (filtrationType) {
-    case `overdue`:
-      return tasks.filter((task) => task.dueDate && task.dueDate < Date.now());
-
-    case `today`:
-      return tasks.filter((task) => task.dueDate && moment(task.dueDate).startOf(`day`).valueOf() === moment().startOf(`day`).valueOf());
-
-    case `repeating`:
-      return tasks.filter((task) => [...Object.entries(task.repeatingDays)]
-          .some((day) => day[1]));
-
-    case `tags`:
-      return tasks.filter((task) => task.tags.size);
-
-    case `favorites`:
-      return tasks.filter((task) => task.isFavorite);
-
-    case `archive`:
-      return tasks.filter((task) => task.isDone);
-
-    default:
-      return tasks;
-  }
-};
-
-
-const renderFilters = (container) => {
+const createFilters = (container) => {
   const fragment = document.createDocumentFragment();
 
   container.innerHTML = ``;
@@ -58,10 +28,11 @@ const renderFilters = (container) => {
 
     filterComponent.isChecked = filter === `all`;
 
-    filterComponent.onFilter = (filterName) => {
-      const filteredTasks = filterTasks(data, filterName);
-
-      renderCards(filteredTasks);
+    filterComponent.onFilter = () => {
+      loadTasks()
+        .then((tasks) => {
+          showTasks(tasks);
+        });
     };
 
     fragment.appendChild(filterComponent.render());
@@ -71,21 +42,40 @@ const renderFilters = (container) => {
 };
 
 
-renderFilters(filtersContainer);
-renderCards(data);
-renderStatistic(data);
+const loadTasks = () => {
+  showMsg(`Loading tasks...`);
+
+  return api.getTasks()
+    .catch(() => {
+      showMsg(`Something went wrong while loading your tasks. Check your connection or try again later`);
+    });
+};
+
+
+createFilters(filtersContainer);
+
+loadTasks()
+  .then((tasks) => {
+    showTasks(tasks);
+  });
 
 
 const onShowStatisticBtnClick = () => {
   filtersContainer.classList.add(`visually-hidden`);
-  cardsContainer.classList.add(`visually-hidden`);
+  boardTasks.classList.add(`visually-hidden`);
+
+  loadTasks()
+    .then((tasks) => {
+      renderStatistic(tasks);
+      boardMsg.classList.add(`visually-hidden`);
+    });
 
   statisticContainer.classList.remove(`visually-hidden`);
 };
 
 const onShowTasksBtnClick = () => {
   filtersContainer.classList.remove(`visually-hidden`);
-  cardsContainer.classList.remove(`visually-hidden`);
+  boardTasks.classList.remove(`visually-hidden`);
 
   statisticContainer.classList.add(`visually-hidden`);
 };

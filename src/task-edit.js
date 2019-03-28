@@ -29,6 +29,8 @@ export default class TaskEdit extends Component {
 
 
     this._form = null;
+    this._cardInner = null;
+    this._submitBtn = null;
     this._deleteBtn = null;
 
     this._dateToggle = null;
@@ -247,6 +249,33 @@ export default class TaskEdit extends Component {
     this._state.isRepeated = this._isRepeated();
   }
 
+  blockCard() {
+    this._submitBtn.disabled = true;
+    this._deleteBtn.disabled = true;
+  }
+
+  unblockCard() {
+    this._submitBtn.textContent = `Save`;
+    this._deleteBtn.textContent = `Delete`;
+
+    this._submitBtn.disabled = false;
+    this._deleteBtn.disabled = false;
+  }
+
+  showError() {
+    const ANIMATION_TIMEOUT = 600;
+
+    this._element.style.animation = `shake ${ANIMATION_TIMEOUT / 1000}s`;
+    this._cardInner.style.borderColor = `red`;
+
+    setTimeout(() => {
+      this._element.style.animation = ``;
+      this._cardInner.style.borderColor = `black`;
+
+      this.unblockCard();
+    }, ANIMATION_TIMEOUT);
+  }
+
 
   static createMapper(target) {
     return {
@@ -309,6 +338,7 @@ export default class TaskEdit extends Component {
 
     if (typeof this._onSave === `function`) {
       this._onSave(newData);
+      this._submitBtn.textContent = `Saving...`;
     }
 
     this.update(newData);
@@ -317,7 +347,8 @@ export default class TaskEdit extends Component {
 
   _onDeleteBtnClick() {
     if (typeof this._onDelete === `function`) {
-      this._onDelete();
+      this._onDelete(this._id);
+      this._deleteBtn.textContent = `Deleting...`;
     }
   }
 
@@ -360,6 +391,8 @@ export default class TaskEdit extends Component {
 
   addElements() {
     this._form = this._element.querySelector(`.card__form`);
+    this._cardInner = this._element.querySelector(`.card__inner`);
+    this._submitBtn = this._element.querySelector(`.card__save`);
     this._deleteBtn = this._element.querySelector(`.card__delete`);
 
     this._dateToggle = this._element.querySelector(`.card__date-deadline-toggle`);
@@ -402,6 +435,8 @@ export default class TaskEdit extends Component {
 
   removeElements() {
     this._form = null;
+    this._cardInner = null;
+    this._submitBtn = null;
     this._deleteBtn = null;
 
     this._dateToggle = null;
