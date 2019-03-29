@@ -57,9 +57,6 @@ const updateBoardAfterChange = (component) => {
   .then((tasks) => {
     component.unblockCard();
     showTasks(tasks);
-  })
-  .catch(() => {
-    component.showError();
   });
 };
 
@@ -88,7 +85,10 @@ const renderCards = (data) => {
       taskComponent.blockCard();
 
       api.updateTask(taskData.id, taskData.toRAW())
-        .then(() => updateBoardAfterChange(taskComponent));
+        .then(() => updateBoardAfterChange(taskComponent))
+        .catch(() => {
+          taskComponent.showError();
+        });
     };
 
     taskComponent.onAddToFavorites = () => {
@@ -97,7 +97,10 @@ const renderCards = (data) => {
       taskComponent.blockCard();
 
       api.updateTask(taskData.id, taskData.toRAW())
-        .then(() => updateBoardAfterChange(taskComponent));
+        .then(() => updateBoardAfterChange(taskComponent))
+        .catch(() => {
+          taskComponent.showError();
+        });
     };
 
     taskEditComponent.onSave = (newData) => {
@@ -106,7 +109,10 @@ const renderCards = (data) => {
       taskEditComponent.blockCard();
 
       api.updateTask(taskData.id, taskData.toRAW())
-        .then(() => updateBoardAfterChange(taskEditComponent));
+        .then(() => updateBoardAfterChange(taskEditComponent))
+        .catch(() => {
+          taskEditComponent.showError();
+        });
     };
 
 
@@ -114,7 +120,10 @@ const renderCards = (data) => {
       taskEditComponent.blockCard();
 
       api.deleteTask(id)
-        .then(() => updateBoardAfterChange(taskEditComponent));
+        .then(() => updateBoardAfterChange(taskEditComponent))
+        .catch(() => {
+          taskEditComponent.showError();
+        });
     };
   }
 
