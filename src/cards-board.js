@@ -52,6 +52,17 @@ const updateTaskData = (currentTask, newTask) => {
   Object.assign(currentTask, currentTask, newTask);
 };
 
+const updateBoardAfterChange = (component) => {
+  api.getTasks()
+  .then((tasks) => {
+    component.unblockCard();
+    showTasks(tasks);
+  })
+  .catch(() => {
+    component.showError();
+  });
+};
+
 
 const renderCards = (data) => {
   const fragment = document.createDocumentFragment();
@@ -77,16 +88,7 @@ const renderCards = (data) => {
       taskComponent.blockCard();
 
       api.updateTask(taskData.id, taskData.toRAW())
-        .then(() => api.getTasks())
-        .then((tasks) => {
-          taskComponent.unblockCard();
-
-          showTasks(tasks);
-        })
-        .catch(() => {
-          taskData.isDone = !taskData.isDone;
-          taskComponent.showError();
-        });
+        .then(() => updateBoardAfterChange(taskComponent));
     };
 
     taskComponent.onAddToFavorites = () => {
@@ -95,17 +97,8 @@ const renderCards = (data) => {
       taskComponent.blockCard();
 
       api.updateTask(taskData.id, taskData.toRAW())
-        .then(() => api.getTasks())
-        .then((tasks) => {
-          taskComponent.unblockCard();
-          showTasks(tasks);
-        })
-        .catch(() => {
-          taskData.isFavorite = !taskData.isFavorite;
-          taskComponent.showError();
-        });
+        .then(() => updateBoardAfterChange(taskComponent));
     };
-
 
     taskEditComponent.onSave = (newData) => {
       updateTaskData(taskData, newData);
@@ -113,15 +106,7 @@ const renderCards = (data) => {
       taskEditComponent.blockCard();
 
       api.updateTask(taskData.id, taskData.toRAW())
-        .then(() => api.getTasks())
-        .then((tasks) => {
-          taskEditComponent.unblockCard();
-
-          showTasks(tasks);
-        })
-        .catch(() => {
-          taskEditComponent.showError();
-        });
+        .then(() => updateBoardAfterChange(taskEditComponent));
     };
 
 
@@ -129,15 +114,7 @@ const renderCards = (data) => {
       taskEditComponent.blockCard();
 
       api.deleteTask(id)
-        .then(() => api.getTasks())
-        .then((tasks) => {
-          taskEditComponent.unblockCard();
-
-          showTasks(tasks);
-        })
-        .catch(() => {
-          taskEditComponent.showError();
-        });
+        .then(() => updateBoardAfterChange(taskEditComponent));
     };
   }
 

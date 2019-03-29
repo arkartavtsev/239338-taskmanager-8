@@ -60,7 +60,7 @@ export default class Task extends Component {
               edit
             </button>
             <button type="button" class="card__btn card__btn--archive">
-              ${this._state.isDone ? `unarch` : `archive`}
+              ${this._state.isDone ? `restore` : `archive`}
             </button>
             <button type="button" class="card__btn card__btn--favorites">
               ${this._state.isFavorite ? `unfavorite` : `favorite`}
